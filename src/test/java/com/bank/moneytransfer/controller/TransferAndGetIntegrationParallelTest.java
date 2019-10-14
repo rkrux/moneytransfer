@@ -27,18 +27,28 @@ import static org.junit.Assert.*;
 public class TransferAndGetIntegrationParallelTest extends JerseyTest {
 
     //create and transfer money between these accounts
-    private static Integer fromId = 5;
-    private static BigDecimal fromBalance = new BigDecimal(30).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-    private static Integer toId = 6;
-    private static BigDecimal toBalance = new BigDecimal(30).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-    private String[] transferAmounts = new String[]{"1.5"};
+    private static Integer[] fromId = new Integer[]{5, 15};
+    private static Integer[] toId = new Integer[]{6, 16};
+    private static BigDecimal[] fromBalance = new BigDecimal[]{
+            new BigDecimal(30).setScale(2, BigDecimal.ROUND_HALF_EVEN),
+            new BigDecimal(50).setScale(2, BigDecimal.ROUND_HALF_EVEN)};
+    private static BigDecimal[] toBalance = new BigDecimal[]{
+            new BigDecimal(30).setScale(2, BigDecimal.ROUND_HALF_EVEN),
+            new BigDecimal(50).setScale(2, BigDecimal.ROUND_HALF_EVEN)};
+
+    private String[] transferAmounts = new String[]{"1.5", "2"};
 
     //Runs in Main Thread
     @Before
     public void createBankAccounts() {
+        //creates 4 accounts
         BankAccountStorage bankAccountStorage = BankAccountStorage.getInstance();
-        bankAccountStorage.addBankAccount(new BankAccount(fromId, fromBalance));
-        bankAccountStorage.addBankAccount(new BankAccount(toId, toBalance));
+        for (int i = 0; i < fromId.length; i++) {
+            bankAccountStorage.addBankAccount(new BankAccount(fromId[i], fromBalance[i]));
+        }
+        for (int i = 0; i < toId.length; i++) {
+            bankAccountStorage.addBankAccount(new BankAccount(toId[i], toBalance[i]));
+        }
     }
 
     @Override
@@ -55,15 +65,16 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
     //transfer money from 5 to 6 in 4 parallel threads
     @Test
     public void testTransferMoneySuccess5to6() {
-        Response response = target("/transferMoney")
-                .request()
-                .post(Entity.json(buildRequest(fromId, toId, transferAmounts[0])));
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertNotNull(response.getEntity());
+        for (int i = 0; i < fromId.length; i++) {
+            Response response = target("/transferMoney")
+                    .request()
+                    .post(Entity.json(buildRequest(fromId[i], toId[i], transferAmounts[i])));
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            assertNotNull(response.getEntity());
+        }
     }
 
-    //Runs in Main Thread that finally verifies the test case by calling the GET API
-    //final balance of first account = (30 - (4 * 1.5)) = 24 | final balance of first account = (30 + (4 * 1.5)) = 36
+    //Runs in Main Thread that finally verifies the test cases by calling the GET API
     @After
     public void verifyTransferMoneySuccess5to6() {
         Response response = target("/bankAccounts/all")
@@ -78,23 +89,44 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
 
         assertTrue(allBankAccounts.size() > 0);
 
-        BankAccount fromBankAccount = allBankAccounts
+        BankAccount fromBankAccount, toBankAccount;
+
+        //Assert transfer 5 to 6
+        //final balance of 1 = (30 - (4 * 1.5)) = 24 | final balance of 2 = (30 + (4 * 1.5)) = 36
+        fromBankAccount = allBankAccounts
                 .stream()
-                .filter(bankAccount -> bankAccount.getId().equals(fromId))
+                .filter(bankAccount -> bankAccount.getId().equals(fromId[0]))
                 .findAny()
                 .get();
-
-        BankAccount toBankAccount = allBankAccounts
+        toBankAccount = allBankAccounts
                 .stream()
-                .filter(bankAccount -> bankAccount.getId().equals(toId))
+                .filter(bankAccount -> bankAccount.getId().equals(toId[0]))
                 .findAny()
                 .get();
-
-        assertEquals(fromId, fromBankAccount.getId());
+        assertEquals(fromId[0], fromBankAccount.getId());
         assertEquals(new BigDecimal(24).setScale(2, BigDecimal.ROUND_HALF_EVEN),
                fromBankAccount.getBalance());
-        assertEquals(toId, toBankAccount.getId());
+        assertEquals(toId[0], toBankAccount.getId());
         assertEquals(new BigDecimal(36).setScale(2, BigDecimal.ROUND_HALF_EVEN),
+                toBankAccount.getBalance());
+
+        //Assert transfer 15 to 16
+        //final balance of 1 = (50 - (4 * 2)) = 42 | final balance of 2 = (50 + (4 * 2)) = 58
+        fromBankAccount = allBankAccounts
+                .stream()
+                .filter(bankAccount -> bankAccount.getId().equals(fromId[1]))
+                .findAny()
+                .get();
+        toBankAccount = allBankAccounts
+                .stream()
+                .filter(bankAccount -> bankAccount.getId().equals(toId[1]))
+                .findAny()
+                .get();
+        assertEquals(fromId[1], fromBankAccount.getId());
+        assertEquals(new BigDecimal(42).setScale(2, BigDecimal.ROUND_HALF_EVEN),
+                fromBankAccount.getBalance());
+        assertEquals(toId[1], toBankAccount.getId());
+        assertEquals(new BigDecimal(58).setScale(2, BigDecimal.ROUND_HALF_EVEN),
                 toBankAccount.getBalance());
     }
 }
