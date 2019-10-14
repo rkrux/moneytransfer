@@ -62,20 +62,17 @@
     </build>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${jetty-version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <version>${jetty-version}</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
+        
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
