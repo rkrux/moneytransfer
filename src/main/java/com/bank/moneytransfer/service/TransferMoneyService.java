@@ -47,7 +47,7 @@ public class TransferMoneyService {
     //transfer money between bank accounts
     public TransferMoneyResponse transfer(TransferMoneyRequest request) {
         //couple of validations on the transfer request
-        this.validateRequest(request);
+        validateRequest(request);
 
         BankAccount from, to;
 

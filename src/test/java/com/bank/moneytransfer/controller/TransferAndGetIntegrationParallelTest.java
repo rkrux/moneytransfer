@@ -62,7 +62,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
                 new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_EVEN));
     }
 
-    //transfer money from 5 to 6 in 4 parallel threads
+    //transfer money from (5 to 6) and (15 to 16) in 4 parallel threads
     @Test
     public void testTransferMoneySuccess5to6() {
         for (int i = 0; i < fromId.length; i++) {

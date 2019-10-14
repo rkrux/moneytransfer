@@ -25,7 +25,7 @@ public class BankAccountsController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addBankAccount(AddBankAccountRequest addBankAccountRequest) {
-        this.validateAddRequest(addBankAccountRequest);
+        validateAddRequest(addBankAccountRequest);
         bankAccountsService.addBankAccount(addBankAccountRequest);
         return Response.status(Response.Status.OK).build();
     }
