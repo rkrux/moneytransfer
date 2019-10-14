@@ -54,9 +54,11 @@ public class TransferMoneyService {
         //Removing this synchronized block will cause the multi-threaded parallel IntegrationTests to fail.
         //This block ensures the data integrity and consistency in a multi-threaded scenario.
         synchronized (sharedLock) {
+            //read the accounts from data-store
             from = bankAccountStorage.getBankAccount(request.getFrom());
             to = bankAccountStorage.getBankAccount(request.getTo());
 
+            //validate account states before transfer
             validateAccounts(request, from, to);
 
             //debit of the bank account
@@ -67,8 +69,9 @@ public class TransferMoneyService {
             //read the updated state of the bank accounts
             from = bankAccountStorage.getBankAccount(request.getFrom());
             to = bankAccountStorage.getBankAccount(request.getTo());
-        }
 
-        return new TransferMoneyResponse(from, to);
+            return new TransferMoneyResponse(from, to);
+        }
+        
     }
 }
