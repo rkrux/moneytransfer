@@ -3,7 +3,6 @@ package com.bank.moneytransfer.service;
 import com.bank.moneytransfer.datastore.BankAccountStorage;
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.types.AccountNotFoundException;
-import com.bank.moneytransfer.exception.types.FundsInsufficientTransferException;
 import com.bank.moneytransfer.exception.types.NegativeAmountTransferException;
 import com.bank.moneytransfer.exception.types.SelfAccountTransferException;
 import com.bank.moneytransfer.model.BankAccount;
@@ -17,8 +16,8 @@ public class TransferMoneyService {
     private static TransferMoneyService INSTANCE = new TransferMoneyService();
     private BankAccountStorage bankAccountStorage = BankAccountStorage.getInstance();
 
-    //these bankAccounts will used to synchronize the atomic operations
-    BankAccount from, to;
+    //these bankAccounts will be used to synchronize the atomic operations
+    private BankAccount from, to;
 
     public static TransferMoneyService getInstance() {
         return INSTANCE;
