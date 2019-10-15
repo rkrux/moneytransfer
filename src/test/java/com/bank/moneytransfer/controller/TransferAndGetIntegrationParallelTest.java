@@ -62,7 +62,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
                 new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_EVEN));
     }
 
-    //transfer money from 5 to 6 in 4 parallel threads
+    //transfer money from (5 to 6) and (15 to 16) in 4 parallel threads
     @Test
     public void testTransferMoneySuccess5to6() {
         for (int i = 0; i < fromId.length; i++) {
@@ -92,7 +92,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
         BankAccount fromBankAccount, toBankAccount;
 
         //Assert transfer 5 to 6
-        //final balance of 1 = (30 - (4 * 1.5)) = 24 | final balance of 2 = (30 + (4 * 1.5)) = 36
+        //final balance of 5 = (30 - (4 * 1.5)) = 24 | final balance of 6 = (30 + (4 * 1.5)) = 36
         fromBankAccount = allBankAccounts
                 .stream()
                 .filter(bankAccount -> bankAccount.getId().equals(fromId[0]))
@@ -111,7 +111,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
                 toBankAccount.getBalance());
 
         //Assert transfer 15 to 16
-        //final balance of 1 = (50 - (4 * 2)) = 42 | final balance of 2 = (50 + (4 * 2)) = 58
+        //final balance of 15 = (50 - (4 * 2)) = 42 | final balance of 16 = (50 + (4 * 2)) = 58
         fromBankAccount = allBankAccounts
                 .stream()
                 .filter(bankAccount -> bankAccount.getId().equals(fromId[1]))

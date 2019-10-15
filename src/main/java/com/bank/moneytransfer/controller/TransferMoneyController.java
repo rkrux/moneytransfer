@@ -28,7 +28,7 @@ public class TransferMoneyController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response transfer(TransferMoneyRequest transferMoneyRequest) {
-        this.validateTransferRequest(transferMoneyRequest);
+        validateTransferRequest(transferMoneyRequest);
         return Response.status(Response.Status.OK).entity(transferMoneyService.transfer(transferMoneyRequest)).build();
     }
 }
