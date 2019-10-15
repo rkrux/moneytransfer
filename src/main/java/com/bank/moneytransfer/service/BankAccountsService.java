@@ -28,13 +28,15 @@ public class BankAccountsService {
         return INSTANCE;
     }
 
-    private void validateRequest(AddBankAccountRequest request) {
+    private void validateRequest(AddBankAccountRequest request) throws IllegalAccountParamsException {
         if ((request.getId().compareTo(0) <= 0) || (request.getBalance().compareTo(BigDecimal.ZERO) <= 0)) {
             throw new IllegalAccountParamsException(ErrorMessages.ILLEGAL_ACCOUNT_PARAMETERS.getValue());
         }
     }
 
-    public void addBankAccount(AddBankAccountRequest addBankAccountRequest) {
+    public void addBankAccount(AddBankAccountRequest addBankAccountRequest)
+            throws AccountPresentException, IllegalAccountParamsException {
+
         validateRequest(addBankAccountRequest);
         boolean added = bankAccountStorage.addBankAccount(converter.apply(addBankAccountRequest));
         //if already present, then added is false

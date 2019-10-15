@@ -18,7 +18,7 @@ public class TransferMoneyController {
     private TransferMoneyService transferMoneyService = TransferMoneyService.getInstance();
 
     //basic validations on the request data
-    private void validateTransferRequest(TransferMoneyRequest request) {
+    private void validateTransferRequest(TransferMoneyRequest request) throws IncompleteRequestParamsException {
         if ((request == null) || (request.getFrom() == null) ||
                 (request.getTo() == null) || (request.getAmount() == null))
             throw new IncompleteRequestParamsException(ErrorMessages.INCOMPLETE_REQUEST_PARAMS.getValue());
@@ -27,7 +27,7 @@ public class TransferMoneyController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response transfer(TransferMoneyRequest transferMoneyRequest) {
+    public Response transfer(TransferMoneyRequest transferMoneyRequest) throws Exception {
         validateTransferRequest(transferMoneyRequest);
         return Response.status(Response.Status.OK).entity(transferMoneyService.transfer(transferMoneyRequest)).build();
     }
