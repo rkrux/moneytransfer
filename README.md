@@ -8,6 +8,7 @@
 - Handles synchronization in a multi-threaded scenario, ensuring data integrity
 
 #### Build And Run
+- Environment: OpenJDK 8
 - Build: 
     ~~~~
     mvn clean install
