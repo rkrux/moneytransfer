@@ -18,7 +18,7 @@ public class TransferMoneyService {
     private BankAccountStorage bankAccountStorage = BankAccountStorage.getInstance();
 
     //shared lock used to synchronize the atomic operations
-    private final Object sharedLock = new Object();
+    private static final Object sharedLock = new Object();
 
     public static TransferMoneyService getInstance() {
         return INSTANCE;
