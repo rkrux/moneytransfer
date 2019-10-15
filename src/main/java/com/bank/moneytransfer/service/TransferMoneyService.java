@@ -17,10 +17,8 @@ public class TransferMoneyService {
     private static TransferMoneyService INSTANCE = new TransferMoneyService();
     private BankAccountStorage bankAccountStorage = BankAccountStorage.getInstance();
 
-    //shared lock used to synchronize the atomic operations
-    private BankAccount from;
-    private BankAccount to;
-
+    //these bankAccounts will used to synchronize the atomic operations
+    BankAccount from, to;
 
     public static TransferMoneyService getInstance() {
         return INSTANCE;
@@ -36,26 +34,13 @@ public class TransferMoneyService {
         }
     }
 
-    //business logic related validations on the in-memory bank accounts
-    private void validateAccounts(BankAccount from, BankAccount to) {
-        if ((from == null) || (to == null)) {
-            throw new AccountNotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND.getValue());
-        }
-    }
+    private TransferMoneyResponse doAtomicTransfer(TransferMoneyRequest request) {
+        //transfer amount from one to another atomically
+        bankAccountStorage.transferAmount(request.getFrom(), request.getTo(), request.getAmount());
 
-    private void doAtomicTransfer(TransferMoneyRequest request) {
-        if (from.getBalance().compareTo(request.getAmount()) < 0) {
-            throw new FundsInsufficientTransferException(ErrorMessages.FUNDS_INSUFFICIENT_TRANSFER.getValue());
-        }
-
-        //debit of the bank account
-        bankAccountStorage.updateBankAccount(from.getId(), (from.getBalance().subtract(request.getAmount())));
-        //credit to the bank account
-        bankAccountStorage.updateBankAccount(to.getId(), (to.getBalance().add(request.getAmount())));
-
-        //read the updated state of the bank accounts
-        from = bankAccountStorage.getBankAccount(request.getFrom());
-        to = bankAccountStorage.getBankAccount(request.getTo());
+        //read the updated account state and return
+        return new TransferMoneyResponse(bankAccountStorage.getBankAccount(request.getFrom()),
+                bankAccountStorage.getBankAccount(request.getTo()));
     }
 
     //transfer money between bank accounts
@@ -67,24 +52,25 @@ public class TransferMoneyService {
         to = bankAccountStorage.getBankAccount(request.getTo());
 
         //validate accounts before synchronized block because either of them could be null
-        validateAccounts(from, to);
+        if ((from == null) || (to == null)) {
+            throw new AccountNotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND.getValue());
+        }
 
-        //Removing this synchronized block will cause the multi-threaded parallel IntegrationTests to fail.
-        //This block ensures the data integrity and consistency in a multi-threaded scenario.
+        //Removing these synchronized blocks will cause the multi-threaded parallel IntegrationTests to fail.
+        //These blocks ensures the data integrity and consistency in a multi-threaded scenario.
         if (from.getId().compareTo(to.getId()) < 0) {
             synchronized (from) {
                 synchronized (to) {
-                    doAtomicTransfer(request);
+                    return doAtomicTransfer(request);
                 }
             }
         } else {
             synchronized (to) {
                 synchronized (from) {
-                    doAtomicTransfer(request);
+                    return doAtomicTransfer(request);
                 }
             }
         }
 
-        return new TransferMoneyResponse(from, to);
     }
 }

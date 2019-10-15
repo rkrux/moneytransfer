@@ -1,5 +1,7 @@
 package com.bank.moneytransfer.datastore;
 
+import com.bank.moneytransfer.exception.ErrorMessages;
+import com.bank.moneytransfer.exception.types.FundsInsufficientTransferException;
 import com.bank.moneytransfer.model.BankAccount;
 
 import java.math.BigDecimal;
@@ -7,7 +9,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//In-Memory DataStore that provides only basic get/add/update functions without business logic
+//In-Memory DataStore that provides basic utility functions
 public class BankAccountStorage {
 
     private static final BankAccountStorage INSTANCE = new BankAccountStorage();
@@ -37,5 +39,18 @@ public class BankAccountStorage {
 
     public void updateBankAccount(Integer id, BigDecimal balance) {
         bankAccounts.put(id, new BankAccount(id, balance));
+    }
+
+    //must be called in a synchronized block to ensure data integrity
+    public void transferAmount(Integer fromId, Integer toId, BigDecimal amount) {
+        //here it's guaranteed that both the accounts exist
+        BankAccount from = getBankAccount(fromId);
+        BankAccount to = getBankAccount(toId);
+        //existing balance must be greater than the transfer amount
+        if (from.getBalance().compareTo(amount) < 0) {
+            throw new FundsInsufficientTransferException(ErrorMessages.FUNDS_INSUFFICIENT_TRANSFER.getValue());
+        }
+        updateBankAccount(fromId, from.getBalance().subtract(amount));
+        updateBankAccount(toId, to.getBalance().add(amount));
     }
 }
