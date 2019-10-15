@@ -49,11 +49,11 @@ public class TransferMoneyService {
         //couple of validations on the transfer request
         validateRequest(request);
 
-        BankAccount from, to;
-
         //Removing this synchronized block will cause the multi-threaded parallel IntegrationTests to fail.
         //This block ensures the data integrity and consistency in a multi-threaded scenario.
         synchronized (sharedLock) {
+            BankAccount from, to;
+            
             //read the accounts from data-store
             from = bankAccountStorage.getBankAccount(request.getFrom());
             to = bankAccountStorage.getBankAccount(request.getTo());
