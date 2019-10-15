@@ -25,7 +25,9 @@ public class TransferMoneyService {
     }
 
     //business logic related validations on the request data
-    private void validateRequest(TransferMoneyRequest request) {
+    private void validateRequest(TransferMoneyRequest request)
+            throws SelfAccountTransferException, NegativeAmountTransferException {
+
         if (request.getFrom().equals(request.getTo())) {
             throw new SelfAccountTransferException(ErrorMessages.SELF_ACCOUNT_TRANSFER.getValue());
         }
@@ -35,7 +37,9 @@ public class TransferMoneyService {
     }
 
     //business logic related validations on the in-memory bank accounts
-    private void validateAccounts(TransferMoneyRequest request, BankAccount from, BankAccount to) {
+    private void validateAccounts(TransferMoneyRequest request, BankAccount from, BankAccount to)
+            throws AccountNotFoundException, FundsInsufficientTransferException {
+
         if ((from == null) || (to == null)) {
             throw new AccountNotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND.getValue());
         }
@@ -45,7 +49,8 @@ public class TransferMoneyService {
     }
 
     //transfer money between bank accounts
-    public TransferMoneyResponse transfer(TransferMoneyRequest request) {
+    public TransferMoneyResponse transfer(TransferMoneyRequest request) throws Exception {
+
         //couple of validations on the transfer request
         validateRequest(request);
 

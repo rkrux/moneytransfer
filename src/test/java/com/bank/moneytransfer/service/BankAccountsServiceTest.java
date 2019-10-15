@@ -33,7 +33,7 @@ public class BankAccountsServiceTest {
     }
 
     @Test
-    public void testBankAccountsService() {
+    public void testBankAccountsService() throws Exception {
         //create bank account 9 with wrong parameters
         try {
             bankAccountsService.addBankAccount(buildRequest(fromId, illegalBalance));

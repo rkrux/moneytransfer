@@ -46,27 +46,27 @@ public class TransferMoneyServiceTest {
     }
 
     @Test(expected = SelfAccountTransferException.class)
-    public void testSelfAccountTransfer() {
+    public void testSelfAccountTransfer() throws Exception {
         transferMoneyService.transfer(this.buildRequest(fromId, fromId, transferAmounts[0]));
     }
 
     @Test(expected = NegativeAmountTransferException.class)
-    public void testNegativeAmountTransfer() {
+    public void testNegativeAmountTransfer() throws Exception {
         transferMoneyService.transfer(this.buildRequest(fromId, toId, transferAmounts[4]));
     }
 
     @Test(expected = AccountNotFoundException.class)
-    public void testAccountNotFound() {
+    public void testAccountNotFound() throws Exception {
         transferMoneyService.transfer(this.buildRequest(10, toId, transferAmounts[0]));
     }
 
     @Test(expected = FundsInsufficientTransferException.class)
-    public void testFundsInsufficientTransfer() {
+    public void testFundsInsufficientTransfer() throws Exception {
         transferMoneyService.transfer(this.buildRequest(fromId, toId, transferAmounts[3]));
     }
 
     @Test
-    public void testMoneyTransferSuccess() {
+    public void testMoneyTransferSuccess() throws Exception {
         TransferMoneyResponse response = transferMoneyService.transfer(this.buildRequest(fromId, toId, transferAmounts[0]));
 
         assertNotNull(response);
