@@ -1,4 +1,4 @@
-## Money Transfer Service
+## Money Transfer Service [![Build Status](https://travis-ci.com/rkrux/moneytransfer.svg?branch=master)](https://travis-ci.com/rkrux/moneytransfer)
 
 #### Business Features
 - Create few sample bank accounts on startup
