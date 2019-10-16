@@ -8,7 +8,10 @@
 - Handles synchronization in a multi-threaded scenario, ensuring data integrity
 
 #### Build And Run
-- Environment: OpenJDK 8
+- Environment: 
+    ~~~~
+    OpenJDK 8
+    ~~~~
 - Build: 
     ~~~~
     mvn clean install
@@ -23,7 +26,7 @@
     - Unit Tests
     - Functional Tests
     - Integration Tests
-    - Multi-Threaded Integration Tests, several parallel threads started in TransferAndGetIntegrationParallelTest.java
+    - Multi-Threaded Integration Tests, several parallel threads started in **TransferAndGetIntegrationParallelTest.java**
 
 #### AddBankAccount POST API
 - Endpoint: /bankAccounts/add
