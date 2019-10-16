@@ -23,7 +23,7 @@
     - Unit Tests
     - Functional Tests
     - Integration Tests
-    - Integration Tests in a Multi-Threaded scenario, multiple parallel threads started by concurrent JUnit
+    - Multi-Threaded Integration Tests, several parallel threads started in TransferAndGetIntegrationParallelTest.java
 
 #### AddBankAccount POST API
 - Endpoint: /bankAccounts/add
