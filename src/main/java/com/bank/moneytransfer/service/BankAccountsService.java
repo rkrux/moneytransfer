@@ -2,6 +2,7 @@ package com.bank.moneytransfer.service;
 
 import com.bank.moneytransfer.datastore.BankAccountStorage;
 import com.bank.moneytransfer.exception.ErrorMessages;
+import com.bank.moneytransfer.exception.types.AccountNotFoundException;
 import com.bank.moneytransfer.exception.types.AccountPresentException;
 import com.bank.moneytransfer.exception.types.IllegalAccountParamsException;
 import com.bank.moneytransfer.model.AddBankAccountRequest;
@@ -28,16 +29,16 @@ public class BankAccountsService {
         return INSTANCE;
     }
 
-    private void validateRequest(AddBankAccountRequest request) throws IllegalAccountParamsException {
+    private void validateAddRequest(AddBankAccountRequest request) throws IllegalAccountParamsException {
         if ((request.getId().compareTo(0) <= 0) || (request.getBalance().compareTo(BigDecimal.ZERO) <= 0)) {
-            throw new IllegalAccountParamsException(ErrorMessages.ILLEGAL_ACCOUNT_PARAMETERS.getValue());
+            throw new IllegalAccountParamsException(ErrorMessages.ILLEGAL_ADD_ACCOUNT_PARAMETERS.getValue());
         }
     }
 
     public void addBankAccount(AddBankAccountRequest addBankAccountRequest)
             throws AccountPresentException, IllegalAccountParamsException {
 
-        validateRequest(addBankAccountRequest);
+        validateAddRequest(addBankAccountRequest);
         boolean added = bankAccountStorage.addBankAccount(converter.apply(addBankAccountRequest));
         //if already present, then added is false
         if (!added) {
@@ -49,5 +50,13 @@ public class BankAccountsService {
         Collection<BankAccount> collection  = bankAccountStorage.getAllBankAccounts();
         List<BankAccount> bankAccounts = new ArrayList<>(collection);
         return new AllBankAccountsResponse(bankAccounts);
+    }
+
+    public BankAccount getAccountById(Integer id) throws AccountNotFoundException {
+        BankAccount bankAccount = bankAccountStorage.getBankAccount(id);
+        if (bankAccount == null) {
+            throw new AccountNotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND.getValue());
+        }
+        return bankAccount;
     }
 }

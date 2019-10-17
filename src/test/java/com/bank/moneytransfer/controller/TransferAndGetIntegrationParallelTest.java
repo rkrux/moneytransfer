@@ -77,7 +77,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
     //Runs in Main Thread that finally verifies the test cases by calling the GET API
     @After
     public void verifyTransferMoneySuccess5to6() {
-        Response response = target("/bankAccounts/all")
+        Response response = target("/bankAccount/all")
                 .request()
                 .get();
 
