@@ -41,30 +41,31 @@ public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
     @Test
     public void testBankAccountController() {
         //add bank account 1 with invalid request
-        Response response = target("/bankAccounts/add")
+        Response response = target("/bankAccount/add")
                 .request()
                 .post(Entity.json(buildPostRequest(bankAccountId, null)));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
         assertEquals(ErrorMessages.INCOMPLETE_REQUEST_PARAMS.getValue(), response.readEntity(String.class));
 
         //add bank account 1
-        response = target("/bankAccounts/add")
+        response = target("/bankAccount/add")
                 .request()
                 .post(Entity.json(buildPostRequest(bankAccountId, "30")));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
         //get all bank accounts
-        response = target("/bankAccounts/all")
+        response = target("/bankAccount/1")
                 .request()
                 .get();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
-        AllBankAccountsResponse result = response.readEntity(AllBankAccountsResponse.class);
-        List<BankAccount> allBankAccounts = result.getAllBankAccounts();
-        assertTrue(allBankAccounts.size() > 0);
+        BankAccount result = response.readEntity(BankAccount.class);
+        assertNotNull(result);
+        assertEquals(new Integer(1), result.getId());
+        assertEquals(new BigDecimal(30).setScale(2, BigDecimal.ROUND_HALF_EVEN), result.getBalance());
 
         //add bank account 1 again
-        response = target("/bankAccounts/add")
+        response = target("/bankAccount/add")
                 .request()
                 .post(Entity.json(buildPostRequest(bankAccountId, "30")));
         assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());

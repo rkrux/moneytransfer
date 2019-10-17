@@ -38,7 +38,7 @@ public class BankAccountsServiceTest {
         try {
             bankAccountsService.addBankAccount(buildRequest(fromId, illegalBalance));
         } catch (IllegalAccountParamsException ex) {
-            assertEquals(ErrorMessages.ILLEGAL_ACCOUNT_PARAMETERS.getValue(), ex.getMessage());
+            assertEquals(ErrorMessages.ILLEGAL_ADD_ACCOUNT_PARAMETERS.getValue(), ex.getMessage());
         }
 
 
