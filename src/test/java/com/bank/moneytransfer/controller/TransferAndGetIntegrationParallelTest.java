@@ -1,6 +1,7 @@
 package com.bank.moneytransfer.controller;
 
 import com.anarsoft.vmlens.concurrent.junit.ConcurrentTestRunner;
+import com.bank.moneytransfer.TestUtil;
 import com.bank.moneytransfer.datastore.BankAccountStorage;
 import com.bank.moneytransfer.exception.ExceptionHandler;
 import com.bank.moneytransfer.model.AllBankAccountsResponse;
@@ -66,7 +67,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
     @Test
     public void testTransferMoneySuccess5to6() {
         for (int i = 0; i < fromId.length; i++) {
-            Response response = target("/transferMoney")
+            Response response = target(TestUtil.TRANSFER_MONEY_PATH)
                     .request()
                     .post(Entity.json(buildRequest(fromId[i], toId[i], transferAmounts[i])));
             assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -85,7 +86,7 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
     //Runs in Main Thread that finally verifies the test cases by calling the GET API
     @After
     public void verifyTransferMoneySuccess5to6() {
-        Response response = target("/bankAccount/all")
+        Response response = target(TestUtil.BANK_ACCOUNT_GET_ALL_PATH)
                 .request()
                 .get();
 
