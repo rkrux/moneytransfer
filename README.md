@@ -30,7 +30,7 @@
     - Multi-Threaded Integration Tests, several parallel threads started in **TransferAndGetIntegrationParallelTest.java**
 
 #### AddBankAccount POST API
-- Endpoint: /bankAccounts/add
+- Endpoint: /bankAccount/add
 - Returns HTTP 200 OK on successful request without body
 - Sample Request:
     ~~~~
@@ -45,7 +45,7 @@
     - HTTP 412 with "Account already present" in Response body
 
 #### GetAccountById GET API
-- Endpoint: /bankAccounts/{id}
+- Endpoint: /bankAccount/{id}
 - Returns HTTP 200 OK on successful request with body
 - Sample Response Body:
     ~~~~
@@ -59,7 +59,7 @@
     - HTTP 412 with "Account not found" in Response body
  
 #### GetAllAccounts GET API
-- Endpoint: /bankAccounts/all
+- Endpoint: /bankAccount/all
 - Returns HTTP 200 OK on successful request with body
 - Sample Response Body:
     ~~~~
