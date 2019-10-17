@@ -3,13 +3,11 @@ package com.bank.moneytransfer.controller;
 import com.bank.moneytransfer.datastore.BankAccountStorage;
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.ExceptionHandler;
-import com.bank.moneytransfer.model.AddBankAccountRequest;
 import com.bank.moneytransfer.model.BankAccount;
 import com.bank.moneytransfer.model.TransferMoneyRequest;
 import com.bank.moneytransfer.model.TransferMoneyResponse;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -80,12 +78,12 @@ public class TransferMoneyFunctionalTest extends JerseyTest {
 
         TransferMoneyResponse transferMoneyResponse = response.readEntity(TransferMoneyResponse.class);
 
-        assertEquals(toId, transferMoneyResponse.getUpdatedAccounts().getFrom().getId());
-        assertEquals(new BigDecimal(41.5).setScale(2, BigDecimal.ROUND_HALF_EVEN),
-                transferMoneyResponse.getUpdatedAccounts().getFrom().getBalance());
         assertEquals(fromId, transferMoneyResponse.getUpdatedAccounts().getTo().getId());
         assertEquals(new BigDecimal(28.5).setScale(2, BigDecimal.ROUND_HALF_EVEN),
                 transferMoneyResponse.getUpdatedAccounts().getTo().getBalance());
+        assertEquals(toId, transferMoneyResponse.getUpdatedAccounts().getFrom().getId());
+        assertEquals(new BigDecimal(41.5).setScale(2, BigDecimal.ROUND_HALF_EVEN),
+                transferMoneyResponse.getUpdatedAccounts().getFrom().getBalance());
     }
 
     @Test

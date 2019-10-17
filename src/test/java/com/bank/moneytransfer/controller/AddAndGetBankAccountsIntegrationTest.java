@@ -53,7 +53,7 @@ public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
                 .post(Entity.json(buildPostRequest(bankAccountId, "30")));
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
-        //get all bank accounts
+        //get bank account 1
         response = target("/bankAccount/1")
                 .request()
                 .get();
