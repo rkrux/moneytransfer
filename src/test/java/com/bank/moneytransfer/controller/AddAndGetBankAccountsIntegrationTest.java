@@ -59,7 +59,7 @@ public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
         assertNotNull(response.getEntity());
         BankAccount result = response.readEntity(BankAccount.class);
         assertNotNull(result);
-        assertEquals(new Integer(1), result.getId());
+        assertEquals(bankAccountId, result.getId());
         assertEquals(new BigDecimal(30).setScale(2, BigDecimal.ROUND_HALF_EVEN), result.getBalance());
 
         //add bank account 1 again
