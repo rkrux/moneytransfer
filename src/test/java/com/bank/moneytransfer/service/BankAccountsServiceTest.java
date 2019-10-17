@@ -45,6 +45,12 @@ public class BankAccountsServiceTest {
         //create bank account 9
         bankAccountsService.addBankAccount(buildRequest(fromId, fromBalance));
 
+        //get bank account 9
+        BankAccount bankAccount9 = bankAccountsService.getAccountById(9);
+        assertNotNull(bankAccount9);
+        assertEquals(fromId, bankAccount9.getId());
+        assertEquals(fromBalance, bankAccount9.getBalance());
+
         //get all accounts
         AllBankAccountsResponse allBankAccountsResponse = bankAccountsService.getAllBankAccounts();
         assertNotNull(allBankAccountsResponse);
