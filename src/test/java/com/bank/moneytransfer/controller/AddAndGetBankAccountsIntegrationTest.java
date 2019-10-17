@@ -18,9 +18,6 @@ import static org.junit.Assert.*;
 
 public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
 
-    //create bankAccount 1
-    private Integer bankAccountId = 1;
-
     @Override
     protected Application configure() {
         return new ResourceConfig(BankAccountsController.class, ExceptionHandler.class);
@@ -40,6 +37,8 @@ public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
     @Test
     public void testBankAccountController() {
         //add bank account 1 with invalid request
+        //create bankAccount 1
+        Integer bankAccountId = 1;
         Response response = target(TestUtil.BANK_ACCOUNT_ADD_PATH)
                 .request()
                 .post(Entity.json(buildPostRequest(bankAccountId, null)));
