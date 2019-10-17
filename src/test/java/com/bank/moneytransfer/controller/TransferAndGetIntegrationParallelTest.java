@@ -74,6 +74,14 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
         }
     }
 
+    private BankAccount findAndGetBankAccount(List<BankAccount> allBankAccounts, Integer id) {
+        return allBankAccounts
+                .stream()
+                .filter(bankAccount -> bankAccount.getId().equals(id))
+                .findAny()
+                .get();
+    }
+
     //Runs in Main Thread that finally verifies the test cases by calling the GET API
     @After
     public void verifyTransferMoneySuccess5to6() {
@@ -93,16 +101,8 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
 
         //Assert transfer 5 to 6
         //final balance of 5 = (30 - (4 * 1.5)) = 24 | final balance of 6 = (30 + (4 * 1.5)) = 36
-        fromBankAccount = allBankAccounts
-                .stream()
-                .filter(bankAccount -> bankAccount.getId().equals(fromId[0]))
-                .findAny()
-                .get();
-        toBankAccount = allBankAccounts
-                .stream()
-                .filter(bankAccount -> bankAccount.getId().equals(toId[0]))
-                .findAny()
-                .get();
+        fromBankAccount = findAndGetBankAccount(allBankAccounts, fromId[0]);
+        toBankAccount = findAndGetBankAccount(allBankAccounts, toId[0]);
         assertEquals(fromId[0], fromBankAccount.getId());
         assertEquals(new BigDecimal(24).setScale(2, BigDecimal.ROUND_HALF_EVEN),
                fromBankAccount.getBalance());
@@ -112,16 +112,8 @@ public class TransferAndGetIntegrationParallelTest extends JerseyTest {
 
         //Assert transfer 15 to 16
         //final balance of 15 = (50 - (4 * 2)) = 42 | final balance of 16 = (50 + (4 * 2)) = 58
-        fromBankAccount = allBankAccounts
-                .stream()
-                .filter(bankAccount -> bankAccount.getId().equals(fromId[1]))
-                .findAny()
-                .get();
-        toBankAccount = allBankAccounts
-                .stream()
-                .filter(bankAccount -> bankAccount.getId().equals(toId[1]))
-                .findAny()
-                .get();
+        fromBankAccount = findAndGetBankAccount(allBankAccounts, fromId[1]);
+        toBankAccount = findAndGetBankAccount(allBankAccounts, toId[1]);
         assertEquals(fromId[1], fromBankAccount.getId());
         assertEquals(new BigDecimal(42).setScale(2, BigDecimal.ROUND_HALF_EVEN),
                 fromBankAccount.getBalance());

@@ -49,7 +49,9 @@ public class TransferMoneyService {
     }
 
     //transfer money between bank accounts
-    public TransferMoneyResponse transfer(TransferMoneyRequest request) throws Exception {
+    public TransferMoneyResponse transfer(TransferMoneyRequest request)
+            throws NegativeAmountTransferException, SelfAccountTransferException,
+            FundsInsufficientTransferException, AccountNotFoundException {
 
         //couple of validations on the transfer request
         validateRequest(request);

@@ -32,7 +32,7 @@
 #### AddBankAccount POST API
 - Endpoint: /bankAccount/add
 - Returns HTTP 200 OK on successful request without body
-- Sample Request:
+- Sample Request Body:
     ~~~~
     {
         "id": 10,
