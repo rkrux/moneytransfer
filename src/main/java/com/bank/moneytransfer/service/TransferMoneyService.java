@@ -17,9 +17,6 @@ public class TransferMoneyService {
     private static TransferMoneyService INSTANCE = new TransferMoneyService();
     private BankAccountStorage bankAccountStorage = BankAccountStorage.getInstance();
 
-    //shared lock used to synchronize the atomic operations
-    private static final Object sharedLock = new Object();
-
     public static TransferMoneyService getInstance() {
         return INSTANCE;
     }
@@ -36,16 +33,15 @@ public class TransferMoneyService {
         }
     }
 
-    //business logic related validations on the in-memory bank accounts
-    private void validateAccounts(TransferMoneyRequest request, BankAccount from, BankAccount to)
-            throws AccountNotFoundException, FundsInsufficientTransferException {
+    private TransferMoneyResponse doAtomicTransfer(TransferMoneyRequest request)
+            throws FundsInsufficientTransferException {
 
-        if ((from == null) || (to == null)) {
-            throw new AccountNotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND.getValue());
-        }
-        if (from.getBalance().compareTo(request.getAmount()) < 0) {
-            throw new FundsInsufficientTransferException(ErrorMessages.FUNDS_INSUFFICIENT_TRANSFER.getValue());
-        }
+        //transfer amount from one to another atomically
+        bankAccountStorage.updateBankAccounts(request.getFrom(), request.getTo(), request.getAmount());
+
+        //read the updated account state and return
+        return new TransferMoneyResponse(bankAccountStorage.getBankAccount(request.getFrom()),
+                bankAccountStorage.getBankAccount(request.getTo()));
     }
 
     //transfer money between bank accounts
@@ -56,27 +52,30 @@ public class TransferMoneyService {
         //couple of validations on the transfer request
         validateRequest(request);
 
-        //Removing this synchronized block will cause the multi-threaded parallel IntegrationTests to fail.
-        //This block ensures the data integrity and consistency in a multi-threaded scenario.
-        synchronized (sharedLock) {
-            //read the accounts from data-store
-            BankAccount from = bankAccountStorage.getBankAccount(request.getFrom());
-            BankAccount to = bankAccountStorage.getBankAccount(request.getTo());
+        //these bankAccount references will be used to synchronize the atomic operations
+        BankAccount from = bankAccountStorage.getBankAccount(request.getFrom());
+        BankAccount to = bankAccountStorage.getBankAccount(request.getTo());
 
-            //validate account states before transfer
-            validateAccounts(request, from, to);
-
-            //debit of the bank account
-            bankAccountStorage.updateBankAccount(from.getId(), (from.getBalance().subtract(request.getAmount())));
-            //credit to the bank account
-            bankAccountStorage.updateBankAccount(to.getId(), (to.getBalance().add(request.getAmount())));
-
-            //read the updated state of the bank accounts
-            from = bankAccountStorage.getBankAccount(request.getFrom());
-            to = bankAccountStorage.getBankAccount(request.getTo());
-
-            return new TransferMoneyResponse(from, to);
+        //validate accounts before synchronized block because either of them could be null
+        if ((from == null) || (to == null)) {
+            throw new AccountNotFoundException(ErrorMessages.ACCOUNT_NOT_FOUND.getValue());
         }
-        
+
+        //Removing these synchronized blocks will cause the multi-threaded parallel IntegrationTests to fail.
+        //These blocks ensures the data integrity and consistency in a multi-threaded scenario.
+        if (from.getId().compareTo(to.getId()) < 0) {
+            synchronized (from) {
+                synchronized (to) {
+                    return doAtomicTransfer(request);
+                }
+            }
+        } else {
+            synchronized (to) {
+                synchronized (from) {
+                    return doAtomicTransfer(request);
+                }
+            }
+        }
+
     }
 }
