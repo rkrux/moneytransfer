@@ -38,7 +38,7 @@ public class BankAccountStorage {
     }
 
     //must be called in a synchronized block to ensure data integrity
-    public void updateAccounts(Integer fromId, Integer toId, BigDecimal amount)
+    public void updateBankAccounts(Integer fromId, Integer toId, BigDecimal amount)
             throws FundsInsufficientTransferException {
 
         //here it's guaranteed that both the accounts exist

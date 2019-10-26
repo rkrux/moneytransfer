@@ -37,7 +37,7 @@ public class TransferMoneyService {
             throws FundsInsufficientTransferException {
 
         //transfer amount from one to another atomically
-        bankAccountStorage.updateAccounts(request.getFrom(), request.getTo(), request.getAmount());
+        bankAccountStorage.updateBankAccounts(request.getFrom(), request.getTo(), request.getAmount());
 
         //read the updated account state and return
         return new TransferMoneyResponse(bankAccountStorage.getBankAccount(request.getFrom()),

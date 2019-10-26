@@ -1,6 +1,5 @@
 package com.bank.moneytransfer.datastore;
 
-import com.bank.moneytransfer.exception.types.FundsInsufficientTransferException;
 import com.bank.moneytransfer.model.BankAccount;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class BankAccountStorageTest {
         assertTrue(added);
 
         //transfer amount from 2 to 10
-        bankAccountStorage.updateAccounts(bankAccountIdFrom, bankAccountIdTo,
+        bankAccountStorage.updateBankAccounts(bankAccountIdFrom, bankAccountIdTo,
                 new BigDecimal(3).setScale(2, BigDecimal.ROUND_HALF_EVEN));
 
         //get account 2 again
