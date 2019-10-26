@@ -57,7 +57,7 @@ public class TransferMoneyServiceTest {
 
     @Test(expected = AccountNotFoundException.class)
     public void testAccountNotFound() {
-        transferMoneyService.transfer(this.buildRequest(10, toId, transferAmounts[0]));
+        transferMoneyService.transfer(this.buildRequest(20, toId, transferAmounts[0]));
     }
 
     @Test(expected = FundsInsufficientTransferException.class)

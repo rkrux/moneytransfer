@@ -15,7 +15,7 @@ public class BankAccountStorageTest {
     private static BankAccountStorage bankAccountStorage;
 
     //create bankAccount 2
-    private Integer bankAccountId = 2;
+    private Integer bankAccountIdFrom = 2, bankAccountIdTo = 10;
 
     @Before
     public void setup() {
@@ -25,30 +25,41 @@ public class BankAccountStorageTest {
     @Test
     public void testBankAccountStorage() {
         //add account 2
-        boolean added = bankAccountStorage.addBankAccount(new BankAccount(bankAccountId,
+        boolean added = bankAccountStorage.addBankAccount(new BankAccount(bankAccountIdFrom,
                 new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_EVEN)));
         assertTrue(added);
 
         //get account 2
-        BankAccount bankAccount = bankAccountStorage.getBankAccount(bankAccountId);
+        BankAccount bankAccount = bankAccountStorage.getBankAccount(bankAccountIdFrom);
         assertNotNull(bankAccount);
-        assertEquals(new Integer(bankAccountId), bankAccount.getId());
+        assertEquals(new Integer(bankAccountIdFrom), bankAccount.getId());
         assertEquals(new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_EVEN), bankAccount.getBalance());
 
         //add account 2 again
-        added = bankAccountStorage.addBankAccount(new BankAccount(bankAccountId,
+        added = bankAccountStorage.addBankAccount(new BankAccount(bankAccountIdFrom,
                 new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_EVEN)));
         assertFalse(added);
 
-        //update account 2
-        bankAccountStorage.updateBankAccount(bankAccountId,
-                new BigDecimal(20).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+        //add account 10
+        added = bankAccountStorage.addBankAccount(new BankAccount(bankAccountIdTo,
+                new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_EVEN)));
+        assertTrue(added);
+
+        //transfer amount from 2 to 10
+        bankAccountStorage.transferAmount(bankAccountIdFrom, bankAccountIdTo,
+                new BigDecimal(3).setScale(2, BigDecimal.ROUND_HALF_EVEN));
 
         //get account 2 again
-        bankAccount = bankAccountStorage.getBankAccount(bankAccountId);
+        bankAccount = bankAccountStorage.getBankAccount(bankAccountIdFrom);
         assertNotNull(bankAccount);
-        assertEquals(new Integer(bankAccountId), bankAccount.getId());
-        assertEquals(new BigDecimal(20).setScale(2, BigDecimal.ROUND_HALF_EVEN), bankAccount.getBalance());
+        assertEquals(new Integer(bankAccountIdFrom), bankAccount.getId());
+        assertEquals(new BigDecimal(7).setScale(2, BigDecimal.ROUND_HALF_EVEN), bankAccount.getBalance());
+
+        //get account 10 again
+        bankAccount = bankAccountStorage.getBankAccount(bankAccountIdTo);
+        assertNotNull(bankAccount);
+        assertEquals(new Integer(bankAccountIdTo), bankAccount.getId());
+        assertEquals(new BigDecimal(13).setScale(2, BigDecimal.ROUND_HALF_EVEN), bankAccount.getBalance());
 
         //get all accounts
         Collection<BankAccount> collection  = bankAccountStorage.getAllBankAccounts();
