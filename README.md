@@ -1,14 +1,18 @@
-## Money Transfer Service
+## Money Transfer Service [![Build Status](https://travis-ci.com/rkrux/moneytransfer.svg?branch=master)](https://travis-ci.com/rkrux/moneytransfer)
 
 #### Business Features
 - Create few sample bank accounts on startup
 - Allow the user to add more bank accounts through a POST API
+- Retrieve an account through a GET API
 - Retrieve all accounts through a GET API
 - Transfer funds between 2 accounts
 - Handles synchronization in a multi-threaded scenario, ensuring data integrity
 
 #### Build And Run
-- Environment: OpenJDK 8
+- Environment: 
+    ~~~~
+    OpenJDK 8
+    ~~~~
 - Build: 
     ~~~~
     mvn clean install
@@ -23,12 +27,12 @@
     - Unit Tests
     - Functional Tests
     - Integration Tests
-    - Integration Tests in a Multi-Threaded scenario, multiple parallel threads started by concurrent JUnit
+    - Multi-Threaded Integration Tests, several parallel threads started in **TransferAndGetIntegrationParallelTest.java**
 
 #### AddBankAccount POST API
-- Endpoint: /bankAccounts/add
+- Endpoint: /bankAccount/add
 - Returns HTTP 200 OK on successful request without body
-- Sample Request:
+- Sample Request Body:
     ~~~~
     {
         "id": 10,
@@ -39,11 +43,25 @@
     - HTTP 404 with "Incomplete transfer parameters" in Response body
     - HTTP 412 with "Illegal add account parameters" in Response body
     - HTTP 412 with "Account already present" in Response body
-    
-#### GetAllAccounts GET API
-- Endpoint: /bankAccounts/all
+
+#### GetAccountById GET API
+- Endpoint: /bankAccount/{id}
 - Returns HTTP 200 OK on successful request with body
-- Sample Body:
+- Sample Response Body:
+    ~~~~
+    {
+        "id": 2,
+        "balance": 50.00
+    }
+    ~~~~
+- Errors:
+    - HTTP 404 with "Illegal get account parameters" in Response body
+    - HTTP 412 with "Account not found" in Response body
+ 
+#### GetAllAccounts GET API
+- Endpoint: /bankAccount/all
+- Returns HTTP 200 OK on successful request with body
+- Sample Response Body:
     ~~~~
     {
         "allBankAccounts": [
@@ -70,7 +88,7 @@
 #### TransferMoney POST API
 - Endpoint: /transferMoney
 - Returns HTTP 200 OK on successful request with body
-- Sample Request:
+- Sample Request Body:
     ~~~~
     {
         "from": 1,
@@ -78,7 +96,7 @@
         "amount": 10
     }
     ~~~~
-- Sample Body: 
+- Sample Response Body: 
     ~~~~
     {
         "updatedAccounts": {

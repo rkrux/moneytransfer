@@ -38,9 +38,10 @@ public class BankAccountStorage {
     }
 
     //must be called in a synchronized block to ensure data integrity
-    public void updateAccounts(Integer fromId, Integer toId, BigDecimal amount) {
-        //here it's guaranteed that both the accounts exist
+    public void updateAccounts(Integer fromId, Integer toId, BigDecimal amount)
+            throws FundsInsufficientTransferException {
 
+        //here it's guaranteed that both the accounts exist
         BankAccount from = getBankAccount(fromId);
         //existing balance must be greater than the transfer amount
         if (from.getBalance().compareTo(amount) < 0) {

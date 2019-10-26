@@ -11,7 +11,8 @@ public enum ErrorMessages {
     NOT_POSITIVE_AMOUNT_TRANSFER("Only positive amount transfer allowed"),
     FUNDS_INSUFFICIENT_TRANSFER("Account balance insufficient for this transfer"),
     SELF_ACCOUNT_TRANSFER("Can't transfer funds to self"),
-    ILLEGAL_ACCOUNT_PARAMETERS("Illegal add account parameters");
+    ILLEGAL_ADD_ACCOUNT_PARAMETERS("Illegal add account parameters"),
+    ILLEGAL_GET_ACCOUNT_PARAMETERS("Illegal get account parameters");
 
     @Getter
     private String value;

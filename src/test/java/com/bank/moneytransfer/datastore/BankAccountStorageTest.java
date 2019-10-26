@@ -1,5 +1,6 @@
 package com.bank.moneytransfer.datastore;
 
+import com.bank.moneytransfer.exception.types.FundsInsufficientTransferException;
 import com.bank.moneytransfer.model.BankAccount;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class BankAccountStorageTest {
     }
 
     @Test
-    public void testBankAccountStorage() {
+    public void testBankAccountStorage() throws Exception {
         //add account 2
         boolean added = bankAccountStorage.addBankAccount(new BankAccount(bankAccountIdFrom,
                 new BigDecimal(10).setScale(2, BigDecimal.ROUND_HALF_EVEN)));

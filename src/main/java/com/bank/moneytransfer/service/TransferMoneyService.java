@@ -3,6 +3,7 @@ package com.bank.moneytransfer.service;
 import com.bank.moneytransfer.datastore.BankAccountStorage;
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.types.AccountNotFoundException;
+import com.bank.moneytransfer.exception.types.FundsInsufficientTransferException;
 import com.bank.moneytransfer.exception.types.NegativeAmountTransferException;
 import com.bank.moneytransfer.exception.types.SelfAccountTransferException;
 import com.bank.moneytransfer.model.BankAccount;
@@ -21,7 +22,9 @@ public class TransferMoneyService {
     }
 
     //business logic related validations on the request data
-    private void validateRequest(TransferMoneyRequest request) {
+    private void validateRequest(TransferMoneyRequest request)
+            throws SelfAccountTransferException, NegativeAmountTransferException {
+
         if (request.getFrom().equals(request.getTo())) {
             throw new SelfAccountTransferException(ErrorMessages.SELF_ACCOUNT_TRANSFER.getValue());
         }
@@ -30,7 +33,9 @@ public class TransferMoneyService {
         }
     }
 
-    private TransferMoneyResponse doAtomicTransfer(TransferMoneyRequest request) {
+    private TransferMoneyResponse doAtomicTransfer(TransferMoneyRequest request)
+            throws FundsInsufficientTransferException {
+
         //transfer amount from one to another atomically
         bankAccountStorage.updateAccounts(request.getFrom(), request.getTo(), request.getAmount());
 
@@ -40,7 +45,10 @@ public class TransferMoneyService {
     }
 
     //transfer money between bank accounts
-    public TransferMoneyResponse transfer(TransferMoneyRequest request) {
+    public TransferMoneyResponse transfer(TransferMoneyRequest request)
+            throws NegativeAmountTransferException, SelfAccountTransferException,
+            FundsInsufficientTransferException, AccountNotFoundException {
+
         //couple of validations on the transfer request
         validateRequest(request);
 

@@ -33,17 +33,23 @@ public class BankAccountsServiceTest {
     }
 
     @Test
-    public void testBankAccountsService() {
+    public void testBankAccountsService() throws Exception {
         //create bank account 9 with wrong parameters
         try {
             bankAccountsService.addBankAccount(buildRequest(fromId, illegalBalance));
         } catch (IllegalAccountParamsException ex) {
-            assertEquals(ErrorMessages.ILLEGAL_ACCOUNT_PARAMETERS.getValue(), ex.getMessage());
+            assertEquals(ErrorMessages.ILLEGAL_ADD_ACCOUNT_PARAMETERS.getValue(), ex.getMessage());
         }
 
 
         //create bank account 9
         bankAccountsService.addBankAccount(buildRequest(fromId, fromBalance));
+
+        //get bank account 9
+        BankAccount bankAccount9 = bankAccountsService.getAccountById(9);
+        assertNotNull(bankAccount9);
+        assertEquals(fromId, bankAccount9.getId());
+        assertEquals(fromBalance, bankAccount9.getBalance());
 
         //get all accounts
         AllBankAccountsResponse allBankAccountsResponse = bankAccountsService.getAllBankAccounts();
