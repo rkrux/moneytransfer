@@ -3,7 +3,7 @@ package com.bank.moneytransfer.controller;
 import com.bank.moneytransfer.TestUtil;
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.ExceptionHandler;
-import com.bank.moneytransfer.model.AddBankAccountRequest;
+import com.bank.moneytransfer.dto.AddBankAccountRequest;
 import com.bank.moneytransfer.model.BankAccount;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -66,7 +66,7 @@ public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
         response = target(TestUtil.BANK_ACCOUNT_ADD_PATH)
                 .request()
                 .post(Entity.json(buildPostRequest(bankAccountId, "30")));
-        assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
         assertEquals(ErrorMessages.ACCOUNT_PRESENT.getValue(), response.readEntity(String.class));
     }
 

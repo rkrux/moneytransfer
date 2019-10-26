@@ -2,7 +2,7 @@ package com.bank.moneytransfer.controller;
 
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.types.IncompleteRequestParamsException;
-import com.bank.moneytransfer.model.TransferMoneyRequest;
+import com.bank.moneytransfer.dto.TransferMoneyRequest;
 import com.bank.moneytransfer.service.TransferMoneyService;
 
 import javax.ws.rs.Consumes;

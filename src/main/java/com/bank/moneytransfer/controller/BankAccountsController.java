@@ -4,7 +4,7 @@ import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.types.AccountNotFoundException;
 import com.bank.moneytransfer.exception.types.IllegalAccountParamsException;
 import com.bank.moneytransfer.exception.types.IncompleteRequestParamsException;
-import com.bank.moneytransfer.model.AddBankAccountRequest;
+import com.bank.moneytransfer.dto.AddBankAccountRequest;
 import com.bank.moneytransfer.service.BankAccountsService;
 
 import javax.ws.rs.*;

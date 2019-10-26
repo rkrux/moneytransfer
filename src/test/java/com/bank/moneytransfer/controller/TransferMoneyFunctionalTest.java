@@ -5,8 +5,8 @@ import com.bank.moneytransfer.datastore.BankAccountStorage;
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.ExceptionHandler;
 import com.bank.moneytransfer.model.BankAccount;
-import com.bank.moneytransfer.model.TransferMoneyRequest;
-import com.bank.moneytransfer.model.TransferMoneyResponse;
+import com.bank.moneytransfer.dto.TransferMoneyRequest;
+import com.bank.moneytransfer.dto.TransferMoneyResponse;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
@@ -104,7 +104,7 @@ public class TransferMoneyFunctionalTest extends JerseyTest {
                 .request()
                 .post(Entity.json(buildTransferRequest(20, toId, transferAmounts[2])));
 
-        assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
         assertEquals(ErrorMessages.ACCOUNT_NOT_FOUND.getValue(), response.readEntity(String.class));
     }
@@ -115,7 +115,7 @@ public class TransferMoneyFunctionalTest extends JerseyTest {
                 .request()
                 .post(Entity.json(buildTransferRequest(fromId, toId, transferAmounts[3])));
 
-        assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
         assertEquals(ErrorMessages.FUNDS_INSUFFICIENT_TRANSFER.getValue(), response.readEntity(String.class));
     }
@@ -126,7 +126,7 @@ public class TransferMoneyFunctionalTest extends JerseyTest {
                 .request()
                 .post(Entity.json(buildTransferRequest(fromId, toId, transferAmounts[4])));
 
-        assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
         assertEquals(ErrorMessages.NOT_POSITIVE_AMOUNT_TRANSFER.getValue(), response.readEntity(String.class));
     }
@@ -137,7 +137,7 @@ public class TransferMoneyFunctionalTest extends JerseyTest {
                 .request()
                 .post(Entity.json(buildTransferRequest(fromId, fromId, transferAmounts[4])));
 
-        assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
         assertEquals(ErrorMessages.SELF_ACCOUNT_TRANSFER.getValue(), response.readEntity(String.class));
     }
