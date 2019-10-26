@@ -102,7 +102,7 @@ public class TransferMoneyFunctionalTest extends JerseyTest {
     public void testAccountNotFound() {
         Response response = target(TestUtil.TRANSFER_MONEY_PATH)
                 .request()
-                .post(Entity.json(buildTransferRequest(10, toId, transferAmounts[2])));
+                .post(Entity.json(buildTransferRequest(20, toId, transferAmounts[2])));
 
         assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
