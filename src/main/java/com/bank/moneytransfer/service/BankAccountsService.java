@@ -5,8 +5,8 @@ import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.types.AccountNotFoundException;
 import com.bank.moneytransfer.exception.types.AccountPresentException;
 import com.bank.moneytransfer.exception.types.IllegalAccountParamsException;
-import com.bank.moneytransfer.model.AddBankAccountRequest;
-import com.bank.moneytransfer.model.AllBankAccountsResponse;
+import com.bank.moneytransfer.dto.AddBankAccountRequest;
+import com.bank.moneytransfer.dto.AllBankAccountsResponse;
 import com.bank.moneytransfer.model.BankAccount;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package com.bank.moneytransfer.model;
+package com.bank.moneytransfer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

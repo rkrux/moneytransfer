@@ -6,8 +6,8 @@ import com.bank.moneytransfer.exception.types.FundsInsufficientTransferException
 import com.bank.moneytransfer.exception.types.NegativeAmountTransferException;
 import com.bank.moneytransfer.exception.types.SelfAccountTransferException;
 import com.bank.moneytransfer.model.BankAccount;
-import com.bank.moneytransfer.model.TransferMoneyRequest;
-import com.bank.moneytransfer.model.TransferMoneyResponse;
+import com.bank.moneytransfer.dto.TransferMoneyRequest;
+import com.bank.moneytransfer.dto.TransferMoneyResponse;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -3,7 +3,7 @@ package com.bank.moneytransfer.controller;
 import com.bank.moneytransfer.TestUtil;
 import com.bank.moneytransfer.exception.ErrorMessages;
 import com.bank.moneytransfer.exception.ExceptionHandler;
-import com.bank.moneytransfer.model.AddBankAccountRequest;
+import com.bank.moneytransfer.dto.AddBankAccountRequest;
 import com.bank.moneytransfer.model.BankAccount;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
