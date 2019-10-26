@@ -66,7 +66,7 @@ public class AddAndGetBankAccountsIntegrationTest extends JerseyTest {
         response = target(TestUtil.BANK_ACCOUNT_ADD_PATH)
                 .request()
                 .post(Entity.json(buildPostRequest(bankAccountId, "30")));
-        assertEquals(Response.Status.PRECONDITION_FAILED.getStatusCode(), response.getStatus());
+        assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
         assertEquals(ErrorMessages.ACCOUNT_PRESENT.getValue(), response.readEntity(String.class));
     }
 
