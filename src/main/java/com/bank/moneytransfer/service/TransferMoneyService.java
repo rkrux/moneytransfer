@@ -16,9 +16,6 @@ public class TransferMoneyService {
     private static TransferMoneyService INSTANCE = new TransferMoneyService();
     private BankAccountStorage bankAccountStorage = BankAccountStorage.getInstance();
 
-    //these bankAccounts will be used to synchronize the atomic operations
-    private BankAccount from, to;
-
     public static TransferMoneyService getInstance() {
         return INSTANCE;
     }
@@ -35,7 +32,7 @@ public class TransferMoneyService {
 
     private TransferMoneyResponse doAtomicTransfer(TransferMoneyRequest request) {
         //transfer amount from one to another atomically
-        bankAccountStorage.transferAmount(request.getFrom(), request.getTo(), request.getAmount());
+        bankAccountStorage.updateAccounts(request.getFrom(), request.getTo(), request.getAmount());
 
         //read the updated account state and return
         return new TransferMoneyResponse(bankAccountStorage.getBankAccount(request.getFrom()),
@@ -47,8 +44,9 @@ public class TransferMoneyService {
         //couple of validations on the transfer request
         validateRequest(request);
 
-        from = bankAccountStorage.getBankAccount(request.getFrom());
-        to = bankAccountStorage.getBankAccount(request.getTo());
+        //these bankAccount references will be used to synchronize the atomic operations
+        BankAccount from = bankAccountStorage.getBankAccount(request.getFrom());
+        BankAccount to = bankAccountStorage.getBankAccount(request.getTo());
 
         //validate accounts before synchronized block because either of them could be null
         if ((from == null) || (to == null)) {

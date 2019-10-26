@@ -46,7 +46,7 @@ public class BankAccountStorageTest {
         assertTrue(added);
 
         //transfer amount from 2 to 10
-        bankAccountStorage.transferAmount(bankAccountIdFrom, bankAccountIdTo,
+        bankAccountStorage.updateAccounts(bankAccountIdFrom, bankAccountIdTo,
                 new BigDecimal(3).setScale(2, BigDecimal.ROUND_HALF_EVEN));
 
         //get account 2 again

@@ -38,15 +38,17 @@ public class BankAccountStorage {
     }
 
     //must be called in a synchronized block to ensure data integrity
-    public void transferAmount(Integer fromId, Integer toId, BigDecimal amount) {
+    public void updateAccounts(Integer fromId, Integer toId, BigDecimal amount) {
         //here it's guaranteed that both the accounts exist
+
         BankAccount from = getBankAccount(fromId);
-        BankAccount to = getBankAccount(toId);
         //existing balance must be greater than the transfer amount
         if (from.getBalance().compareTo(amount) < 0) {
             throw new FundsInsufficientTransferException(ErrorMessages.FUNDS_INSUFFICIENT_TRANSFER.getValue());
         }
         from.setBalance(from.getBalance().subtract(amount));
+
+        BankAccount to = getBankAccount(toId);
         to.setBalance(to.getBalance().add(amount));
     }
 }
